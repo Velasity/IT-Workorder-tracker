@@ -10,12 +10,10 @@ Built as a modern alternative to bloated enterprise tracking systems, this platf
 * **Frontend:** Clean, responsive HTML/CSS/JS interface
 * **Architecture:** Designed for local deployment, easy extension, and future native packaging (Electron).
 
+![Workorder Portal Dashboard](./assets/workorder-preview1.png)
 
-![alt text](<Screenshot 2026-09-29 160321.png>)
+![Workorder Portal Dashboard](./assets/workorder-preview2.png)
 
-![alt text](<Screenshot 2026-09-29 160424.png>)
-
-![alt text](<Screenshot 2026-09-29 160503.png>)
-
+![Workorder Portal Dashboard](./assets/workorder-preview3.png)
 
 Have fun and Enjoy!!
