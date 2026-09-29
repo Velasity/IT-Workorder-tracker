@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal IT Management Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section with Role Switcher Aligned Side-by-Side -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <h1 style="margin: 0; font-size: 1.8rem; color: var(--text-color, #1e293b);">IT Workorder tracking</h1>
+                <p style="margin: 4px 0 0 0; color: var(--text-muted, #64748b); font-size: 0.9rem;">Real-Time Project Tracking, PC Deployments & Onboarding Workorders by Brian</p>
+            </div>
+
+            <!-- Role Switcher Widget -->
+            <div style="display: flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 14px; border-radius: var(--radius-md, 8px); border: 1px solid var(--border-color, #cbd5e1); box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 0.85rem;">
+                <span style="display: flex; align-items: center; gap: 4px; color: var(--text-muted, #64748b);">👤 Current Role:</span>
+                <select id="currentUserRole" onchange="switchUserRole()" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-color, #cbd5e1); background: #f8fafc; font-weight: 500; cursor: pointer;">
+                    <option value="Admin">Admin (Full Access)</option>
+                    <option value="Staff">Staff (Restricted)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Control Panel / Form -->
+        <section class="card">
+            <h2>Create New Request / Assignment</h2>
+            <form id="workorderForm">
+                <div class="form-group">
+                    <label>Request Type:</label>
+                    <select id="type" required>
+                        <option value="IT Project">📊 IT Project</option>
+                        <option value="PC Deployment">🖥️ PC Deployment</option>
+                        <option value="Onboarding Device Request">👤 Onboarding Device Request</option>
+                        <option value="Hardware RMA">💻 Hardware RMA / Replacement</option>
+                        <option value="Software License">🔑 Software License Provisioning</option>
+                        <option value="Network Access">🌐 Network & Access Request</option>
+                        <option value="Security Incident">🚨 Security Incident / Patching</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Priority Level:</label>
+                    <select id="priority" required>
+                        <option value="Low">🟢 Low Priority</option>
+                        <option value="Medium" selected>🟡 Medium Priority</option>
+                        <option value="Urgent">🔴 Urgent / Critical</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Title / Summary:</label>
+                    <input type="text" id="title" placeholder="e.g., Setup New Hire Laptop / Firewall Upgrade" required>
+                </div>
+                <div class="form-group">
+                    <label>Client / Requester:</label>
+                    <input type="text" id="client_name" placeholder="e.g., HR Department or Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label>Assign to Staff:</label>
+                    <select id="assigned_staff_id">
+                        <option value="">-- Unassigned --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description / Details:</label>
+                    <textarea id="description" placeholder="Specify hardware requirements, software specs, or project details..."></textarea>
+                </div>
+
+                <!-- Hardware Metadata Section -->
+                <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-md, 8px); border: 1px dashed var(--border-color, #cbd5e1); margin-bottom: 16px;">
+                    <p style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted, #64748b); margin-bottom: 8px; text-transform: uppercase;">Hardware Details (For Deployments / RMAs)</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 0.75rem;">Asset Tag #</label>
+                            <input type="text" id="asset_tag" placeholder="e.g., AT-99214">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 0.75rem;">Serial Number</label>
+                            <input type="text" id="serial_number" placeholder="e.g., S/N 5CG943...">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+                        <label style="font-size: 0.75rem;">Specs (RAM / Storage / Model)</label>
+                        <input type="text" id="specs" placeholder="e.g., 16GB RAM, 512GB NVMe SSD">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Submit Request</button>
+                <button type="button" id="seedBtn" class="btn secondary">Seed Sample Users</button>
+            </form>
+        </section>
+
+        <!-- User Management Card -->
+        <section class="card">
+            <h2>Manage IT Staff & Users</h2>
+            <form id="userForm" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="userName" placeholder="Staff Name (e.g., Sarah Jenkins)" required style="flex: 2; padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+                <select id="userRole" style="flex: 1; padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+                    <option value="Staff">Staff</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Client">Client</option>
+                </select>
+                <button type="submit" class="btn" style="flex: 1;">Add User</button>
+            </form>
+            <div id="userList" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <!-- Dynamically populated user pills -->
+            </div>
+        </section>
+
+        <!-- Live Status Board -->
+        <section class="card">
+            <h2>Live Tracking & Notifications Board</h2>
+            
+            <!-- Summary Analytics Bar -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;">
+                <div style="background: #fef3c7; padding: 10px; border-radius: var(--radius-md, 8px); text-align: center;">
+                    <div style="font-size: 0.75rem; font-weight: 600; color: #92400e; text-transform: uppercase;">Pending</div>
+                    <div id="count-pending" style="font-size: 1.25rem; font-weight: bold; color: #b45309;">0</div>
+                </div>
+                <div style="background: #e0f2fe; padding: 10px; border-radius: var(--radius-md, 8px); text-align: center;">
+                    <div style="font-size: 0.75rem; font-weight: 600; color: #0369a1; text-transform: uppercase;">In Progress</div>
+                    <div id="count-inprogress" style="font-size: 1.25rem; font-weight: bold; color: #0284c7;">0</div>
+                </div>
+                <div style="background: #dcfce7; padding: 10px; border-radius: var(--radius-md, 8px); text-align: center;">
+                    <div style="font-size: 0.75rem; font-weight: 600; color: #166534; text-transform: uppercase;">Completed</div>
+                    <div id="count-completed" style="font-size: 1.25rem; font-weight: bold; color: #15803d;">0</div>
+                </div>
+            </div>
+
+            <!-- Visual Progress Bar Graph -->
+            <div style="margin-bottom: 16px; background: #e2e8f0; border-radius: 9999px; height: 10px; overflow: hidden; display: flex;">
+                <div id="bar-pending" style="background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                <div id="bar-inprogress" style="background: #0284c7; width: 0%; transition: width 0.3s ease;"></div>
+                <div id="bar-completed" style="background: #22c55e; width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+
+            <!-- Search & Export Controls -->
+            <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+                <input type="text" id="searchInput" placeholder="Search by title, client, or staff..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color, #cbd5e1); border-radius: var(--radius-md, 8px); font-size: 0.9rem; background-color: #f8fafc; min-width: 200px;">
+                <button onclick="exportToCSV()" style="background: #0f172a; color: white; border: none; padding: 10px 16px; border-radius: var(--radius-md, 8px); cursor: pointer; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                    📥 Export CSV
+                </button>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterBoard('All')">All</button>
+                <button class="filter-btn" onclick="filterBoard('Pending')">Pending</button>
+                <button class="filter-btn" onclick="filterBoard('In Progress')">In Progress</button>
+                <button class="filter-btn" onclick="filterBoard('Completed')">Completed (Notifications)</button>
+            </div>
+            <div id="projectList" class="grid-board">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
