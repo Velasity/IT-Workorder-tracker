@@ -9,3 +9,13 @@ Built as a modern alternative to bloated enterprise tracking systems, this platf
 * **Database:** SQLite (Lightweight & Portable)
 * **Frontend:** Clean, responsive HTML/CSS/JS interface
 * **Architecture:** Designed for local deployment, easy extension, and future native packaging (Electron).
+
+
+![alt text](<Screenshot 2026-09-29 160321.png>)
+
+![alt text](<Screenshot 2026-09-29 160424.png>)
+
+![alt text](<Screenshot 2026-09-29 160503.png>)
+
+
+Have fun and Enjoy!!
